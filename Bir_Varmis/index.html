@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Türk halk anlatılarından yayımlanmış sekiz masal. Bir masal seç, okumaya başla.">
+  <title>Bir Varmış — Türk Masalları</title>
+  <style>
+    
+    :root { --bordo: #713344; --turkuaz: #147d86; --turkuaz-acik: #edf8f7; --metin: #292d30;
+      --soluk: #666a6d; --cizgi: #e6e7e4; --zemin: #f7f8f6; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body { margin: 0; background: white; color: var(--metin); font: 16px/1.65 "Segoe UI", Arial, sans-serif; }
+    button, input { font: inherit; }
+    a { color: var(--turkuaz); text-underline-offset: 4px; }
+    button, a, input { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .4; cursor: default; }
+    :focus-visible { outline: 3px solid var(--turkuaz); outline-offset: 4px; }
+    [hidden] { display: none !important; }
+    .kapsayici { width: min(1120px, calc(100% - 64px)); margin: auto; }
+    .atla { position: absolute; left: 16px; top: -70px; background: white; padding: 12px; z-index: 2; }
+    .atla:focus { top: 10px; }
+    
+    header { border-top: 3px solid var(--turkuaz); border-bottom: 1px solid var(--cizgi); }
+    .ust { min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .marka { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--bordo); }
+    .marka strong { font: bold 27px Georgia, serif; letter-spacing: -.7px; }
+    .simge { width: 22px; height: 22px; border: 5px double var(--bordo); transform: rotate(45deg); }
+    nav { display: flex; gap: 28px; }
+    nav a { color: var(--soluk); font-size: 14px; text-decoration: none; }
+    nav a:hover { color: var(--bordo); }
+    .giris { display: grid; grid-template-columns: 1fr 230px; align-items: center; padding: 64px 0 52px; gap: 36px; }
+    .etiket { color: var(--turkuaz); font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; }
+    h1 { font: normal clamp(42px, 5vw, 64px)/1.12 Georgia, serif; letter-spacing: -2px; margin: 17px 0 20px; }
+    h1 em { color: var(--bordo); font-weight: normal; }
+    .giris p { color: var(--soluk); max-width: 520px; margin: 0 0 24px; }
+    .basla { display: inline-block; background: var(--turkuaz); color: white; text-decoration: none; padding: 10px 22px; border-radius: 5px; font-size: 14px; }
+    .basla:hover { background: #10636a; }
+    .motif { width: 210px; height: 210px; color: var(--turkuaz); }
+    .ince { stroke: #b9dedb; }
+    
+    .bolum-basligi { display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid var(--cizgi); padding: 22px 0; }
+    .bolum-basligi h2 { margin: 0; padding-left: 12px; border-left: 3px solid var(--turkuaz); font: normal 25px Georgia, serif; }
+    .bolum-basligi span { color: var(--soluk); font-size: 13px; }
+    .kutuphane { display: grid; grid-template-columns: 285px 1fr; gap: 40px; align-items: start; padding-bottom: 60px; }
+    aside { background: var(--zemin); border: 1px solid var(--cizgi); border-radius: 8px; padding: 20px 14px; }
+    label { display: block; font-size: 12px; font-weight: 600; margin: 0 6px 8px; }
+    input { width: 100%; border: 1px solid #c9ceca; border-radius: 4px; background: white; padding: 10px 12px; font-size: 14px; color: var(--metin); }
+    #sonuc { display: block; color: var(--soluk); font-size: 12px; margin: 12px 6px; }
+    .masal-listesi { list-style: none; margin: 0; padding: 0; }
+    .masal-listesi button { display: flex; gap: 12px; text-align: left; width: 100%; padding: 13px 10px; border: 0; border-left: 3px solid transparent; background: transparent; border-radius: 3px; color: var(--metin); }
+    .masal-listesi button:hover { background: #eeefeb; }
+    .masal-listesi button[aria-pressed="true"] { background: var(--turkuaz-acik); border-left-color: var(--turkuaz); box-shadow: 0 2px 8px #292d3008; }
+    .sira { font-size: 11px; color: var(--turkuaz); padding-top: 4px; }
+    .masal-listesi strong { font-size: 14px; font-weight: 600; display: block; }
+    .masal-listesi small { display: block; color: var(--soluk); font-size: 11px; margin-top: 3px; }
+    #bos { font-size: 14px; padding: 6px; }
+    #okuma { min-width: 0; padding: 8px 0; }
+    .okuma-ust { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
+    #konum { font-size: 11px; color: var(--turkuaz); letter-spacing: 1.8px; text-transform: uppercase; }
+    .ayarlar { display: flex; gap: 6px; }
+    .ayarlar button { border: 1px solid #b9dedb; color: var(--turkuaz); background: var(--turkuaz-acik); padding: 5px 10px; border-radius: 4px; font-size: 13px; min-height: 34px; }
+    article h3 { font: normal clamp(30px, 3.4vw, 42px)/1.18 Georgia, serif; letter-spacing: -1px; color: var(--bordo); margin: 0 0 12px; }
+    article h3:focus { outline: none; }
+    .bilgi { font-size: 12px; color: var(--soluk); padding-bottom: 21px; border-bottom: 1px solid var(--cizgi); margin: 0 0 24px; }
+    .metin { font: var(--okuma-boyutu, 19px)/1.9 Georgia, "Times New Roman", serif; max-width: 65ch; }
+    .metin p { margin: 0 0 19px; }
+    .metin p:first-child::first-letter { font-size: 2.7em; float: left; line-height: 1; padding: 6px 8px 0 0; color: var(--bordo); }
+    .kaynak { color: var(--soluk); font-size: 12px; padding-top: 16px; border-top: 1px solid var(--cizgi); }
+    .gezinme { display: flex; justify-content: space-between; gap: 16px; margin-top: 24px; }
+    .gezinme button { padding: 9px 16px; background: var(--turkuaz-acik); color: var(--turkuaz); border: 1px solid #b9dedb; border-radius: 4px; font-size: 13px; }
+    #hakkinda { border-top: 1px solid var(--cizgi); padding: 35px 0; display: grid; grid-template-columns: 1fr 2fr; gap: 40px; }
+    #hakkinda h2 { font: normal 25px Georgia, serif; margin: 0; }
+    #hakkinda p { font-size: 14px; color: var(--soluk); margin: 0 0 12px; }
+    footer { border-top: 1px solid var(--cizgi); padding: 22px 0; color: var(--soluk); font-size: 12px; }
+    footer .kapsayici { display: flex; justify-content: space-between; gap: 20px; }
+    
+    button, a { transition: background-color .18s, color .18s; }
+    article:not([hidden]) { animation: belirme .22s ease-out; }
+    @keyframes belirme { from { opacity: .3; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    
+    @media (max-width: 760px) {
+      .kapsayici { width: calc(100% - 36px); }
+      .ust { min-height: 76px; flex-wrap: wrap; gap: 10px; padding: 14px 0; } nav { gap: 16px; } nav a { font-size: 12px; }
+      .marka strong { font-size: 23px; } .simge { width: 18px; height: 18px; }
+      .giris { grid-template-columns: 1fr; padding: 40px 0; gap: 0; }
+      .motif { display: none; } h1 { letter-spacing: -1.5px; }
+      .bolum-basligi { flex-direction: column; gap: 6px; }
+      .kutuphane { grid-template-columns: 1fr; gap: 30px; }
+      .masal-listesi { display: grid; grid-template-columns: 1fr 1fr; }
+      .masal-listesi button { height: 100%; padding: 12px 7px; gap: 6px; }
+      .masal-listesi strong { font-size: 13px; }
+      .okuma-ust { margin-bottom: 20px; }
+      #hakkinda { grid-template-columns: 1fr; gap: 16px; }
+      footer .kapsayici { flex-direction: column; gap: 5px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body id="ust">
+  <a class="atla" href="#okuma">Okuma alanına geç</a>
+  <header>
+    <div class="kapsayici ust">
+      <a class="marka" href="#ust"><span class="simge" aria-hidden="true"></span><strong>Bir Varmış</strong></a>
+      <nav aria-label="Ana gezinme"><a href="#kutuphane">Masallar</a><a href="#hakkinda">Derleme hakkında</a></nav>
+    </div>
+  </header>
+  <main class="kapsayici">
+    <section class="giris" aria-labelledby="giris-baslik">
+      <div>
+        <span class="etiket">Türk masallarından bir seçki</span>
+        <h1>Bir masal kadar<br><em>uzak, bir söz kadar yakın.</em></h1>
+        <p>Dilden dile, kuşaktan kuşağa… Anadolu'nun anlatı dünyasına küçük bir yolculuk. Bir masal seç, kelimelerin izinden git.</p>
+        <a class="basla" href="#kutuphane">Masalları keşfet <span aria-hidden="true">↗</span></a>
+      </div>
+      
+      <svg class="motif" viewBox="0 0 210 210" fill="none" aria-hidden="true">
+        <path class="ince" d="M105 5 205 105 105 205 5 105Z M105 23 187 105 105 187 23 105Z"/>
+        <path d="M105 40 120 55 120 70 135 70 135 85 150 85 170 105 150 125 135 125 135 140 120 140 120 155 105 170 90 155 90 140 75 140 75 125 60 125 40 105 60 85 75 85 75 70 90 70 90 55Z" fill="var(--turkuaz-acik)" stroke="currentColor" stroke-width="2"/>
+        <path d="m105 67 38 38-38 38-38-38Z" stroke="#713344" stroke-width="2"/>
+        <path d="m105 88 17 17-17 17-17-17Z" fill="#713344"/>
+        <path d="M105 10v18m0 154v18M10 105h18m154 0h18" stroke="currentColor" stroke-width="2"/>
+        <circle cx="105" cy="105" r="3" fill="white"/>
+      </svg>
+    </section>
+    <section id="kutuphane" aria-labelledby="kutuphane-baslik">
+      <div class="bolum-basligi"><h2 id="kutuphane-baslik">Masal kütüphanesi</h2><span>8 masal · Kaynak metinler</span></div>
+      <div class="kutuphane">
+        <aside aria-label="Masal seçimi">
+          <label for="arama">Hangi masalı arıyorsun?</label>
+          <input type="search" id="arama" placeholder="Masal adı veya tema…" autocomplete="off">
+          <span id="sonuc" role="status">8 masal listeleniyor</span>
+          <ul class="masal-listesi">
+            <li><button aria-pressed="true" aria-controls="masal-1"><span class="sira" aria-hidden="true">01</span><span><strong>Keloğlan ve Padişah</strong><small>İyilik · Dayanışma</small></span></button></li>
+            <li><button aria-pressed="false" aria-controls="masal-2"><span class="sira" aria-hidden="true">02</span><span><strong>Tembel Ahmet</strong><small>Çalışkanlık · Cesaret</small></span></button></li>
+            <li><button aria-pressed="false" aria-controls="masal-3"><span class="sira" aria-hidden="true">03</span><span><strong>Keloğlan</strong><small>Akıl · Yolculuk</small></span></button></li>
+            <li><button aria-pressed="false" aria-controls="masal-4"><span class="sira" aria-hidden="true">04</span><span><strong>Tembel Kız</strong><small>Emek · Sorumluluk</small></span></button></li>
+            <li><button aria-pressed="false" aria-controls="masal-5"><span class="sira" aria-hidden="true">05</span><span><strong>Karanan ile Tilki</strong><small>Dürüstlük · İyilik</small></span></button></li>
+            <li><button aria-pressed="false" aria-controls="masal-6"><span class="sira" aria-hidden="true">06</span><span><strong>Külden Eşek</strong><small>Kardeşlik · Cesaret</small></span></button></li>
+            <li><button aria-pressed="false" aria-controls="masal-7"><span class="sira" aria-hidden="true">07</span><span><strong>On iki gardaş meseli</strong><small>Kardeşlik · Sadakat</small></span></button></li>
+            <li><button aria-pressed="false" aria-controls="masal-8"><span class="sira" aria-hidden="true">08</span><span><strong>İncircinin dediği</strong><small>İletişim · Aile</small></span></button></li>
+          </ul>
+          <p id="bos" hidden>Bu aramayla eşleşen masal yok. Başka bir sözcük dene.</p>
+        </aside>
+        <div id="okuma">
+          <div class="okuma-ust">
+            <span id="konum">Masal 01 / 08</span>
+            <div class="ayarlar" role="group" aria-label="Okuma yazısı boyutu">
+              <button id="kucult" aria-label="Yazıyı küçült">A−</button>
+              <button id="buyut" aria-label="Yazıyı büyüt">A+</button>
+            </div>
+          </div>
+          <article id="masal-1" aria-labelledby="baslik-1">
+            <h3 id="baslik-1" tabindex="-1">Keloğlan ve Padişah</h3>
+            <p class="bilgi">İyilik · Dayanışma &nbsp; / &nbsp; Yaklaşık 4 dk okuma</p>
+            <div class="metin">
+              <p>Metel metel mengi çatal. İki sıçan göt atar. Bindim uzun boynuna, çıktım Halep yoluna. Halep yolu sarp Pazar içinde maymun gezer. Maymun beni korkuttu. Kulağımı sarkıttı.</p>
+              <p>Bir varmış bir yokmuş, Allah’ın kulu çokmuş, çok söylemesi günahmış. Diyarın birinde bir Keloğlan ve bir de bunun anası varmış. Keloğlan ve anası eski bir evde otururlarmış. Bir gün anası gelerek Keloğlan’a demiş ki: -Al oğlum, babadan kalan altınları bozdur da bir usta getir ki şu evi başımıza yıkılmadan yeniden yaptıralım.</p>
+              <p>Keloğlan altınları almış, yolda giderken bir topluluğun kedinin birisini dövdüklerine şahit olmuş. Hemen ortaya atılarak:</p>
+              <p>-Alın şu altını da onu dövmeyi bırakın, demiş.</p>
+              <p>Altını vererek kediyi kurtarır, kediyle beraber yoluna devam eder. Bir süre gittikten sonra bir de bakar ki bu seferde yine üç-beş kişi bir köpeği sopalıyor. Yine hemen müdahale ederek: -Durun ne yapıyorsunuz, alın şu altını da o hayvanı dövmeyi bırakın, der.</p>
+              <p>Böylece köpeği de kurtarır ve yanında hem köpek, hem de kedi olduğu halde yoluna devam eder. Tam şehre yaklaştığı sırada yine bir kalabalıkla karşılaşır. Bu seferde oduncular bir meşe kesmiş ve içinden çıkan büyük yılanı öldürmeye çalışıyorlarmış. Yine Keloğlan dayanamaz ve:</p>
+              <p>-Şu bir altını alında o yılanı serbest bırakın, der.</p>
+              <p>Bu şekilde yılanı da kurtarır.</p>
+              <p>Yılan Keloğlana: -Hey âdemoğlu ben yılanlar padişahının oğluyum. Babamla kızıştık ve buraya saklandım. Lakin yerimi buldular, gel beraber tekrar babama gidelim, der. Keloğlan ve yılan birlikte padişah yılanın huzuruna çıkarlar. Şehzade yılan olanları babasına anlatınca padişah yılan buna sevinir ve Keloğlanı mükafatlandırmaya karar verir. Keloğlana seslenerek:</p>
+              <p>-Dile benden ne dilersen, âdemoğlu, der. Tam bu sırada padişahın oğlu şehzade yılan Keloğlan’a fısıldayıp, dilinin altındaki mührü istemesini söyler. Keloğlan da: -Mührünüzü istiyorum, deyince Padişah yılan:</p>
+              <p>-Benim en kıymetli hazinemi istiyorsun ama oğlumu kurtardığın için yine de vereceğim, der. Sonrada bu mühre ne emrederse onun yerine geleceğini söyler ve mührü Keloğlan’a verir. Keloğlan mührü, kediyi ve köpeği alıp evine gelir. Oğlunun boş geldiğini gören anası Keloğlanı epey azarlar. Ertesi gün Keloğlan anasına: -Ana bana git padişahın küçük kızını iste, der. Anası olmaz oğlum, koskoca padişah kızını sana verir mi? dediyse de Keloğlan’ın ısrarı üzerine çaresiz gider padişahtan küçük kızını Keloğlan’a ister. Padişah da:</p>
+              <p>-Benim sarayımın karşısına aynı güzellikte bir saray yaptırırsanız kızımı veririm, der. Anası gelip olanları Keloğlan’a anlatır. Keloğlan gülerek: -Ne üzülüyorsun ana, beş dakikalık iş, der. Hemen mühürden bir saray yapmasını ister ve koskocaman bir saray ortaya çıkar. Ertesi sabah padişah uyandığında sarayı görünce şaşırır ve çaresiz olarak kızını Keloğlan’a verir. Keloğlan yeni sarayında mührü en güzel köşeye koyar. Bir gün Keloğlan evde yokken, bu mührün varlığından haberdar olan birisi boncukçu kılığında gelir ve Keloğlan’ın karısına inci, boncuk satmak ister. Hiç parası olmadığını söyleyen geline, evde bulunan ne varsa getir, alırım deyince gelin de gider mührü getirir ve satıcıya verir. Uyanık adam mührü aldığı gibi gölün karşı tarafına geçer ve Keloğlan’ın sarayı olduğu yerde yığılı kalır. Padişah da kızını Keloğlan’dan alır. Akşam kedi ve köpekle eve gelen Keloğlan olanları duyduğundan üzüntüden renkten renge girer. Bu sırada kedi ortaya atılarak: -Mührü ben bulurum, ama gölü geçemem, der.</p>
+              <p>Köpek de: -Ben gölü yüzerek geçebilirim, sen de sırtıma oturursun, sen de geçmiş olursun, der. Kedi köpeğin sırtına biner ve karşıya geçerler. Adamın evinin önüne varınca, köpek kapıda beklemiş, kedi bir fare yakalayıp kuyruğuna acı biber sürmüş. Daha sonra içeri girmiş ve mührü çalan adam uyurken farenin kuyruğunu adamın burnuna sokmuş. Böylece adam hapşırmış ve dilinin altındaki mühür dışarı fırlamış. Kedi hemen mührü kapmış ve köpeğe binmiş. Tam gölün ortasına geldiklerinde kedi mührü ağzından düşürür ve onu bir balık yutar. Bu sefer de iş köpeğe düşer. Keloğlan ve köpek balık pazarına gidmişler. Köpek tek tek balıkları koklayarak mührün hangi balığın karnında olduğunu Keloğlan’a göstermiş. Keloğlan da hemen o balığı satın almış ve beraber eve gelmişler. Keloğlan tekrar sarayına ve karısına kavuşmuş ve yeniden kırk gün kırk gece süren bir düğünle evlenmiş. Kedi, köpek, Keloğlan, karısı ve anası hep beraber mutluluk içinde yaşamışlar.</p>
+            </div>
+            <p class="kaynak">Anonim / Vikikaynak katkıcıları · <a href="https://tr.wikisource.org/wiki/Kelo%C4%9Flan_ve_Padi%C5%9Fah" target="_blank" rel="noopener">Keloğlan ve Padişah: kaynak metni incele ↗</a><br>CC BY-SA 4.0. Yalnızca paragraf düzeni değiştirilmiştir.</p>
+          </article>
+          <article id="masal-2" aria-labelledby="baslik-2" hidden>
+            <h3 id="baslik-2" tabindex="-1">Tembel Ahmet</h3>
+            <p class="bilgi">Çalışkanlık · Cesaret &nbsp; / &nbsp; Yaklaşık 8 dk okuma</p>
+            <div class="metin">
+              <p>Bir padişahın aşk yüzünden delirmiş bir oğlu ile üç kızı vardı. Kızların düğün zamanı geçmeye başlamıştı. Bir gün bu üç sultan, Bostancıbaşını çağırdı. Her biri bir karpuz ısmarladı: Büyüğü çok geçmiş bir karpuz, ortancası az geçmiş bir karpuz, küçüğü tam kemalinde bir karpuz istedi. Bostancıbaşı istenen karpuzları getirdi. Sultanlardan her biri kendininkine adını yazarak, karpuzları padişaha gönderdi. Padişah, karpuzları birer birer kesti. Kızlarının bu bilmecelerindeki manaları anladı. Padişah, ilkin büyük kızını çağırdı. “Seni bir gence mi vereyim, ergin ve olgun bir adama mı vereyim?” diye sordu. Büyük sultan: “Siz bilirsiniz, padişahım!” diye cevap verdi. Padişah, onu sağ vezirin oğluna verdi, düğünlerini yaptı. Sonra, ortanca kızını çağırarak aynı suali sordu ve aynı cevabı aldı.</p>
+              <p>Bunu da sol vezirin oğluna verdi. Sıra, küçük kızına gelince onu da çağırdı, ona da aynı suali sordu fakat küçük sultan saraylara mahsus nazikâne sözlere lüzum görmedi: “Şevketli babacığım! Beni gence veriniz!” dedi. Padişah bu cevaptan öfkelendi. Hemen tellal çağırtarak nerede tembel, âciz, hımbıl bir genç varsa haber verilmesini ilan ettirdi. Meğer fakir bir kadıncağızın “Tembel Ahmet” adlı bir oğlu varmış. Yerinden kalkmaya bile üşenirmiş. Bunun kulübesini padişaha haber verdiler. Padişah küçük kızını, ceza olmak üzere bu gence verdi. Bunların da düğünü yapıldı. Tembel Ahmet, bir gün evin bahçesinde hava almak istedi. Annesi onu arkasına alarak bahçeye götürdü. Sultan hanım, kaynanasına dedi ki: “Sen onu bahçeye götürdün oradan getirmek de bana düşer.” Kaynanası: “Ah sen onu nasıl getirebilirsin?” demesiyle, “Kocam değil mi?</p>
+              <p>Elbette getiririm.” dedi ve hemen mutfağa koştu, ateşli bir odun alarak Tembel Ahmet’in yanına gitti: “Sen hiç utanmaz mısın? Annen seni bahçeye sırtında getirip götürüyor. Daha ne zamana kadar evde kalacaksın! Haydi, git, çalış. Para kazan! Sen de bir adam ol. Yoksa bu odunla sana âlâ bir ziyafet çekerim.” dedi. Tembel Ahmet, bu hâli görünce korkusundan sokağa fırladı, çarşıya gitti. Orada onun bunun eşyasını taşımaya başladı. Akşama kadar beş on kuruş kazandı. Akşam olunca eve geldi. Yavaşça kapıyı çaldı; “Tak tak!” Annesi: “Kim o?”</p>
+              <p>Tembel Ahmet: “Benim, Tembel Ahmet!”</p>
+              <p>“Gir içeri!”</p>
+              <p>“Hanım evde mi?”</p>
+              <p>“Evde!”</p>
+              <p>“Odun elinde mi?”</p>
+              <p>“Elinde!”</p>
+              <p>“Öyle ise içeri gelemem. Al bu parayı, ben yine kazanmaya gidiyorum.”</p>
+              <p>Annesi her ne yaptıysa Tembel Ahmet içeri girmedi. Ertesi gün yine beş on kuruş kazanarak akşam kapıya geldi, “Tak tak!”</p>
+              <p>“Kim o?”</p>
+              <p>“Benim, Tembel Ahmet!”</p>
+              <p>“İçeri gelsene oğlum!”</p>
+              <p>“Hanım evde mi?”</p>
+              <p>“Evde!”</p>
+              <p>“Odun elinde mi?”</p>
+              <p>“Elinde!”</p>
+              <p>“Öyle ise içeri gelemem. Al bu parayı, ben yine kazanmaya gidiyorum.” Ertesi gün, bir tüccar, Tembel Ahmet’e beş yüz kuruş verdi. “Bu parayı harçlık olarak ailene bırak! Seni kervanbaşı tayin ediyorum. Benimle beraber Bağdat’a gideceksin. Hayvan başına sana yüz kuruş vereceğim.” dedi. Tembel Ahmet teklifi kabul etti. Beş yüz kuruşu alarak eve geldi.</p>
+              <p>“Kim o?”</p>
+              <p>“Benim, Tembel Ahmet!”</p>
+              <p>“İçeri gelsene oğlum!”</p>
+              <p>“Hanım evde mi?”</p>
+              <p>“Evde değil!”</p>
+              <p>“Odun elinde mi?”</p>
+              <p>“Elinde değil!”</p>
+              <p>“Al bu beş yüz kuruşu; ben ticaret için Bağdat’a gidiyorum.” “Oğlum içeri gel de biraz yüzünü göreyim.”</p>
+              <p>“Hanım evdedir, gelemem. Allah’a ısmarladık!”</p>
+              <p>Tembel Ahmet kervan ile beraber yola çıktı. Kervan, bir gün, ıssız, ağaçsız, susuz bir çöle vardı. Araya araya, tepeler arasında gizli bir kuyu buldular. Tüccar, Tembel Ahmet’e kova ile kuyuya inmesini ve orada kovayı su ile doldurmasını emretti. Bu işin ücreti olarak hayvan başına bir lira alınacaktı. Tembel Ahmet kuyuya indi, kovayı su ile doldurdu. Kervan halkı kovayı yukarı çektikçe hayvanlara su veriyorlardı. Hayvanlar suyu bitirince tekrar kovayı sallıyorlardı. Tembel Ahmet onu yeniden dolduruyordu fakat Tembel Ahmet yalnız bu işle meşgul değildi. Kuyunun içinde bir kapı gördü. Bu kapıdan içeriye girince kendisini bir köşk içinde buldu. Bu köşkte kara gözlü bir kız oturmuş, mahzun mahzun düşünüyordu. Kara gözlü kız, Tembel Ahmet’i görünce: “Aman Allah aşkına olsun!</p>
+              <p>Beni bu kuyudan kurtar!” diye yalvarmaya başladı. Tembel Ahmet: “Şimdi seni çıkarırsam dışarıdaki arkadaşlarım belki sana bir fenalık ederler. Daha birkaç gün sabret. İlk uğradığımız şehirde kervandan ayrılarak iki at ve bir ip merdivenle buraya geleceğim, seni kurtaracağım.” dedi. Kız, kendisini unutmasın diye yüzüğünü parmağından çıkararak Tembel Ahmet’in parmağına taktı. Tembel Ahmet, köşkün bahçesine çıkınca orada, yemişleri narlardan farksız suni nar ağaçları gördü. Tembel Ahmet, tabii sandığı bu narlardan kopararak omzundaki heybesinin iki gözünü doldurdu ve kıza veda ederek kuyudan çıktı. Yolda kendi memleketine giden bir kervana rastladı. Bu kervanın içinde eski bir arkadaşını gördü. Heybeyi bu arkadaşına teslim ederek evine gönderdi. Bir gün akşama doğru Tembel Ahmet’in evinde karısıyla annesi konuşuyorlardı.</p>
+              <p>Kapı çalındı, “Tembel Ahmet size gönderdi.” diye içeriye narlarla dolu bir heybe verildi. Küçük sultan: “Ne güzel narlar!” diyerek heybeyi kilere götürdü. Bir gece gelin hanım, kaynanasına: “Bu güzel narlardan bir tanesini keselim de yiyelim.” dedi. Bir nar getirerek kesti. Narın yapma olduğunu, içinin inci, elmas, yakut ve zümrüt dolu olduğunu gördüler. “Bu narları saklayalım.” dedi. Ertesi gün kestikleri nardan çıkan mücevherleri sattılar. Bunun parasıyla padişahın sarayına karşı güzel bir saray yaptırdılar. İçinde tekke gibi bütün yolcuların ve turistlerin misafir edileceğini, âlâ yemekler verileceğini ilan ettiler. Padişah, vezirine: “Bu sarayın sahibini bilmek istiyorum. Kıyafetimizi değiştirerek oraya gidelim. Bir çorba içelim. Belki sahiplerini de görürüz.” dedi. Derviş kıyafetine girerek yeni saraya geldiler.</p>
+              <p>Oradaki adamlardan hiçbirini tanıyamadılar. Tembel Ahmet’in kervanı Bağdat’a ulaşınca tüccar, ona altın bir tepsi verdi. “Bu tepsiyi Musul padişahına götürürsen sana çok bahşiş verecektir.” dedi. Tembel Ahmet Musul’a giderek tepsiyi padişaha takdim etti. Padişah, Tembel Ahmet’in parmağındaki yüzüğü görünce dört seneden beri kayıp olan kızının yüzüğü olduğunu anladı. Padişah, yüzüğün ne suretle eline geçtiğini sordu. Tembel Ahmet kuyu macerasını anlattı. Padişah: “O benim kızımdır. Sizin memleketin veliahdına nişanlıdır. Bir gün kızım ortadan kayboldu. Çok aradık bulamadık. Nişanlısı da uğradığı felaketten çıldırdı. Şimdi kızımı kuyudan kurtarırsan hem benden hem kendi padişahından çok hediyelere sahip olursun.” dedi. Tembel Ahmet’e beş on araba ile bir tabur asker verdi. Tembel Ahmet, kuyunun yanına gelince içine indi.</p>
+              <p>Kara gözlü sultanın bütün eşyasını dışarı çıkardıktan sonra sultana dedi ki: “Şimdi sen de çıkmaya hazırlan! Fakat önce ben çıkacağım çünkü sen daha evvel çıkarsan beni burada bırakıp gitmeleri ihtimali var!” Tembel Ahmet kuyudan çıktıktan sonra sultanı da çıkardı. Musul’a babasının yanına götürdü. Kız, babasıyla annesiyle görüştükten sonra nişanlısının yanına gitmek istedi. Tembel Ahmet, nişanlısının eniştesi olduğunu, kendisi de memleketine gitmek üzere olduğundan beraber gidebileceklerini söyledi. Sultan memnuniyetle gitmeye razı oldu. Kafile, şehre bir saat mesafedeki bir köye ulaşınca Tembel Ahmet: “Siz burada kuracağımız çadırda bekleyiniz. Ben gidip geldiğinizi haber vereyim.” dedi. Tembel Ahmet kulübesinin kapısına geldi. Sultan hanım, Tembel Ahmet gelince tanıyabilsin diye kulübeyi yıktırmamıştı. Tembel Ahmet kapıyı çaldı, “Tak tak!”.</p>
+              <p>“Tak, tak!”</p>
+              <p>“Kim o?”</p>
+              <p>“Benim, Tembel Ahmet!”</p>
+              <p>“İçeriye gelsene!”</p>
+              <p>“Hanım evde mi?”</p>
+              <p>“Evde!”</p>
+              <p>“Odun elinde mi?”</p>
+              <p>“Elinde değil!” Tembel Ahmet içeri girdi. Bir de ne görsün, evlerinin içi muhteşem bir saray olmuş. Karısı, gönderdiği narların mücevheratla dolu olduğunu, yalnız bir tanesini satmakla bir saray yaptırdıklarını anlattı. Tembel Ahmet dedi ki: “Bu narların perisini de getirdim. Dört seneden beri deli olan kardeşin bu periyi görünce yeniden akıllanacak çünkü bu peri, onun o kadar derin bir aşkla sevdiği nişanlısıdır.” Sultan bu haberden çok memnun oldu. Tembel Ahmet’e: “Sen hamama git, elbiseni değiştir, ben onu getiririm.” dedi. Hemen altın arabaları hazırlatarak karşılamaya gitti. Kara gözlü sultanı büyük bir debdebe ile saraya getirdi. Ertesi akşam padişahla oğluna bir ziyafet çekti. Padişah ister istemez deli şehzadeyi de beraber götürmeye razı oldu.</p>
+              <p>Delinin hiç kimseye bir zararı yoktu. Yalnız derin bir kasvet içinde yaşıyor, etrafında söylenen sözlerden hiç haberdar olmuyordu. Padişah, Tembel Ahmet’i tanıyamadı. O sırada küçük kızı, yasemin çubuğunu getirerek kendisine takdim edince onu tanıdı. “Padişahım! Beni tembellikten kurtarıp hiç yorulmaz bir adam hâline koyan kızınızdır. O beni kendisine layık bir koca yaptı. Ben de ona ve size gayet kıymetli bir hediye getirdim: Dört seneden beri şehzadeyi bu hâlde bulunduran sevgilisini getirdim.” Bu anda, dört senelik aşk hasretiyle yanan Kara gözlü sultan içeri girerek şehzadeye doğru koştu. Şehzade bunu görünce elini eline götürdü. Gözleri canlanmaya başladı. Hâlinden, tavrından yavaş yavaş hatıralarının uyandığı, hafızasının yerine geldiği anlaşılıyordu. Birkaç saniye geçtikten sonra tamamıyla aklı başına geldi: “Ah!</p>
+              <p>Sevgilim!” diyerek nişanlısına sarıldı. Padişah, kızına ve damadına teşekkürler etti. Kırk gün kırk gece düğün yapılarak şehzade ile kara gözlü sultan muratlarına erdiler.</p>
+            </div>
+            <p class="kaynak">Ziya Gökalp, Altın Işık · <a href="https://litres-tr.com/book/ziya-gokalp/altin-isik-69428596/read/" target="_blank" rel="noopener">Tembel Ahmet: kaynak metni incele ↗</a><br>Yazarın kamu malı eseri; kaynak e-kitaptaki masal metni. Yalnızca paragraf düzeni değiştirilmiştir.</p>
+          </article>
+          <article id="masal-3" aria-labelledby="baslik-3" hidden>
+            <h3 id="baslik-3" tabindex="-1">Keloğlan</h3>
+            <p class="bilgi">Akıl · Yolculuk &nbsp; / &nbsp; Yaklaşık 11 dk okuma</p>
+            <div class="metin">
+              <p>Fakir bir babanın üç oğlu vardı. Büyük oğlunu dişinden, tırnağından arttırarak tahsile göndermişti. Onu bir ilim adamı yapacaktı. Küçük oğluna ileride kendi dükkânını bırakacaktı. Ortanca oğluna gelince ona verecek hiçbir şeyi kalmıyordu. Hatta ona bir ad bile koymamıştı. Ehemmiyetsizliğini göstermek üzere onu daima “Keloğlan” diye çağırırdı. Bu suretle, bütün mahalleli arasında onun adı, “Keloğlan” kalmıştı. Keloğlan, henüz yedi yaşında iken ekmeğini elinin emeğiyle kazanmaya başladı. Hamallık, kahveci yamaklığı, aşçı çıraklığı, ayakkabı satıcılığı gibi birçok işe girdi. Eline pek az para geçiyordu. On iki yaşına kadar türlü sıkıntılar içinde yaşadı. Bu yaşa girince kendi nefsine güvenen tam bir erkek oldu. Artık, büyük işlere girmek, şan kazanmak, büyük bir adam olmak istiyordu. Keloğlan, ara sıra şiir söylemeye de yelteniyor, yanık koşmalar düzüyordu. Gönlünün duygularına bu koşmalarla kanat vermek istiyordu. Bir gün gönlünden şöyle bir koşma fırladı:</p>
+              <p>Burada sevinç yok, dert çok, keder çok, İsterim bir altın yurda varayım. Talihim arayıp bulmadı beni, Bari ben gezeyim, onu arayım…</p>
+              <p>Bu koşma, Keloğlan’ı verilmiş bir karar karşısında bıraktı: Gurbete çıkmak… O nasılsa, şarkı söylerken kendi haberi olmadan bu kararı vermişti. Her akşam yalnız kalınca bu yoldaki koşmaları tekrar eder dururdu:</p>
+              <p>Diyorlar, herkesin nasibi varmış, Ona rast gelmedim ben bu toprakta. Burada değilse başka yerdedir, Gideyim, arayım onu uzakta…</p>
+              <p>Keloğlan’ın kalbinde bu uzaklara gitmek, talihini aramak fikri ömrünün uzun ve karanlık gecesinde bir şimşek gibi parlamıştı. Bir gün, dağarcığına bir kat çamaşır ve biraz ekmekle peynir koydu. Dağarcığını sırtına bağladı. Sedeften ayrılan bir inci gibi, başka yerlerde kısmet bulmak ümidiyle, doğduğu şehre veda etti. Yaya olarak, başını aldı gurbete çıktı. Meğer Keloğlan gibi talihini aramaya çıkmış başka çocuklar da varmış. Keloğlan, yolda giderken birinci gün Orhan’a rastladı. İkinci gün Turhan’a, üçüncü gün Tarhan’a rastladı. Bunlar da Keloğlan gibi dağarcığı omzunda birer küçük sergüzeşt idiler. Hepsi öyle on on iki yaşları arasında bulunan bu dört küçük serseri, arkadaş oldular. Nereye gideceklerini bilmiyorlardı. Gittikleri yerde ne yapacaklarına dair de hiçbir kararları yoktu fakat kalpleri kendilerine uzaktan gülümseyen ümitlerle dolu idi.</p>
+              <p>Bir gün muratlarına erecekleri, ruhlarına gizlice vadedilmiş gibiydi. Küçücük ruhlarında sarsılmaz bir imanları vardı. Eski kahramanlar gibi talihlerine güveniyorlar, tehlikelere atılmaktan erkekçesine bir zevk duyuyorlardı. Keloğlan’la arkadaşları yüce yüce dağları aştılar, coşkun coşkun ırmaklardan geçtiler; nihayet ıssız bir çölün büyük bir ırmağa yanaştığı noktada, yeşil bir vadiye girdiler. Burada tepesi bulutlara ulaşan somaki mermerden bir kule gördüler. Kulenin doğu tarafında, somaki mermerden bir saray, batı tarafında yine aynı cins mermerden hazine odaları vardı. Keloğlan, “Burada talihimizi deneyebiliriz.” dedi. Turist çocuklar, büyük sevinçle kuleye yaklaştılar. Kulenin yanına gelince yüce bir ağacın altında bir dev karısının dikiş dikmekte olduğunu gördüler. O, arkasını yola doğru çevirmiş olduğundan çocukları göremedi fakat çocuklar onun kazan kadar kafasını, tulumbalara benzeyen memelerini, burç gibi gövdesini iyice görebiliyorlardı.</p>
+              <p>Dev karısı sağ memesini sol omzuna, sol memesini sağ omzuna atmıştı. Keloğlan, arkadaşlarına, “Hepimiz dev karısının memesini emelim. Memesini emersek oğulları olacağımızdan bizi kolay kolay yiyemez. Meğerki çok acıkmış ola!” dedi. Hepsi, parmaklarının ucuna basarak dev karısının yanına geldiler. İkisi sağ memesine, ikisi sol memesine sarılarak, pınarın oluğundan su içer gibi kana kana içtiler. Devlerin kanununa göre, bir dev karısının memesini emenler onun süt evladı olurlardı, dev karısı artık onları yiyemezdi. Dev karısı başını çevirince, dört çocuğun memelerini emdiğini gördü.</p>
+              <p>Dev karısı: “Siz hepiniz evlatlarım oldunuz. Artık size bir şey yapamam. Bu gece misafirim olunuz. Yarın yolunuza devam edersiniz.” Keloğlan: “Peki teyzeciğim, bu gece sana misafir oluruz. Zaten annem ölürken bana vasiyet etmişti. Biraz büyürsem buraya gelip ablasını görmemi benden rica etmişti. İşte ben de arkadaşlarımla beraber seni görmeye geldim.” Dev karısı, Keloğlan’ın hilesine karşı hile yapmak istiyordu. Maksadı gece, bunları uyuttuktan sonra, eski zamanın dev âdetlerine kulak asmayarak, âdeti tanımayarak hepsini yemekti fakat süt evlatlarını uyanık iken yemeye utanıyordu. Dev karısının neler düşündüğünü Keloğlan sezmişti. O da ihtiyatlı bulunmaya karar verdi. Akşam olunca bıçağı ile parmağını kesti. İçine tuz doldurdu. Kendi kendine “Artık gece gözlerime uyku girmez!” dedi. Dev karısı, çocuklara sevdikleri yemeklerden bir ziyafet çekti. Yemekten sonra yatak odasını göstererek çekildi. Çocuklar yatağa girdiler, yalnız Keloğlan uyumadı, arkadaşları derhâl uyudular. Dev karısı yarım saat sonra çocukların uyuyup uyumadığını anlamak için odanın kapısına geldi, yavaşça bağırdı.</p>
+              <p>Dev karısı: “Uyur uyanık kim var?”</p>
+              <p>Keloğlan: “Ben varım!”</p>
+              <p>Dev karısı: “Niçin uyumazsın, Keloğlan?”</p>
+              <p>Keloğlan: “Annem bana her gece bir tulumba kaymaklı dondurma yapardı. Onu yer, uyurdum. Şimdi onu yemediğim için uykum kaçtı. Bir türlü uyuyamıyorum.”</p>
+              <p>Dev karısı: “Süt mandırada. Mandıra da buraya bir saat. Dağ başında kar varsa da o da yarım saat uzakta. Dondurma iki saate kadar hazır olmaz.” Keloğlan: “Üç saat olsa bile zararı yok çünkü dondurma olmazsa sabaha kadar uyuyamayacağım.”</p>
+              <p>Dev karısı: “Peki öyle ise bekle! İki saate kadar dondurma ile beraber geleceğime söz veriyorum.”</p>
+              <p>Dev karısı gitti. Mandıradan süt, karlı dağdan kar getirdi. Dondurmayı yapıp Keloğlan’ın önüne koydu. Keloğlan arkadaşlarını uyandırdı. Dondurmadan güzelce yediler. Arkadaşları yeniden uyudular. Keloğlan da uyur gibi yatakta uzandı. Yarım saat geçer geçmez dev karısı yeniden kapıya geldi. Yavaş sesle bağırdı. Dev karısı: “Uyur uyanık, kim var?”</p>
+              <p>Keloğlan: “Ben varım teyze!”</p>
+              <p>Dev karısı: “Neden uyumazsın, Keloğlan?”</p>
+              <p>Keloğlan: “Annem dondurmadan sonra bana âlâ kıymalı bir su böreği pişirirdi. Onu yedikten sonra rahatça uyurdum.”</p>
+              <p>Dev karısı: “Koyunlar ağılda. Ağılsa buraya bir buçuk saat uzak. Demek ki yine iki saat bekleyeceksin.”</p>
+              <p>Keloğlan: “Beklerim teyze!”</p>
+              <p>İki saat sonra çocuklar, su böreğini de yediler. Tekrar yatağa girip uyudular. Yarım saat sonra dev karısı yine geldi.” Dev karısı: “Uyur uyanık kim var?”</p>
+              <p>Keloğlan: “Ben varım teyze!”</p>
+              <p>Dev karısı: “Niçin uyumazsın, Keloğlan?” Keloğlan bu sefer de bir tepsi baklava istedi. Bundan sonra da sırasıyla elmasiye, muhallebi, kuzu dolması istedi. Dev karısı, tek, Keloğlan uyusun diye her istediği yemeği pişirip getiriyordu. Son yemeği yapmak için yine ağıla gitmeye mecbur oldu. Ağılın bir buçuk saat uzak olduğunu Keloğlan biliyordu. Bu sırada, güneş ilk ışıklarıyla ufku yaldızlamaya başladı. Keloğlan, arkadaşlarını uyandırdı. Köşkün kulesine girerek demir kapısını arkadan sürmelediler. Kulenin tepesindeki gezinti yerine çıkarak dev karısının geri gelmesini beklediler. Biraz sonra da dev karısı geldi. Çocukları köşkte bulamayınca kaçmış olduklarını zannetti. Bu anda kulenin tepesinden gülüşler, kahkahalar işitti. Bir de ne görsün, çocuklar kulenin tepesinde! Hemen, kuleye hücum etti. Kulenin demir kapısı sımsıkı kapanmıştı. Dev karısı, hiddetinden ne yapacağını şaşırdı. “Çocuklar, kapıyı açın!” diye bağırdı.</p>
+              <p>Çocuklar, yukarıda türkü söyleyerek oynuyorlardı:</p>
+              <p>Ey yalancı süt annemiz! Sen istedin bizi yemek, Senden daha kurnazız biz, Çektik senden türlü yemek.</p>
+              <p>Dev karısı, dev karısı! Gitti yağın tam yarısı!</p>
+              <p>Pek tatlıydı dondurmanız, Kaymaklıydı muhallebi. Bizi köşke kondurmanız, Sizi etti fakir gibi…</p>
+              <p>Dev karısı, dev karısı! Gitti sütün tam yarısı!</p>
+              <p>Ne güzeldi su böreği! Titriyordu elmasiye! Harap ettik hep mideyi, Baklavadan yiye yiye…</p>
+              <p>Dev karısı, dev karısı! Gitti balın tam yarısı!</p>
+              <p>Dev karısı bu sözleri işitince kapıyı yıkmak için bir kazma aramaya gitti.</p>
+              <p>Dev karısı kazma ile gelince Keloğlan sordu:</p>
+              <p>“Teyze bu kazma ile ne yapacaksın?”</p>
+              <p>“Kuleyi yıkacağım.”</p>
+              <p>“Kuleyi niçin yıkmak istiyorsun?”</p>
+              <p>“Seni ele geçirmek için.”</p>
+              <p>“Ya ben kendi isteğimle yanına gelirsem?”</p>
+              <p>“O vakit seni evladım gibi severim.”</p>
+              <p>Keloğlan arkadaşlarına yavaşça şu sözleri söyledi:</p>
+              <p>“Ben kuleden aşağı ineceğim. Alay için kendimi ona teslim edeceğim. Dev karısı bana bir şey yapamaz. Siz hiç korkmayın!” Keloğlan, kendisini kulenin penceresinden sarkıttı. Dev karısı sağ elini uzatarak Keloğlan’ı oradan aldı. Sol elinde tutmakta olduğu bir çuvalın içine koydu. Çuvalın ağzını sıkıca bağladı, dedi ki:</p>
+              <p>“Keloğlan, bu hâlinde de bana bir oyun yap da göreyim! Şimdi mutfağa gidiyorum, dişlerimi takıp geleceğim, seni kıtır kıtır yiyeceğim.”</p>
+              <p>Keloğlan: “Yiyebilirsin afiyetler olsun teyze!” Dev karısı, mutfağa koştu. Keloğlan, hemen cebinden çıkardığı küçük bir bıçakla çuvalı yardı; içinden çıktı. Bahçede, dev karısının sevgili buzağısı otluyordu. Keloğlan onu tuttu, getirdi. Çuvalın içine koydu, ağzını sımsıkı bağladı. Kendisi, sazların arasına girerek saklandı. Bu anda dev karısı geldi. Kazma gibi dişlerini ağzına takmıştı. Çehresi ifritlerden, zebanilerden daha korkunç bir şekle girmişti. Çuvalı yakalayarak ağzına götürdü. Çuvalla beraber içindeki mahluku yemeye başladı. Hepsini yedikten sonra, elinde püskül gibi bir şey kaldı. “Bu nedir, acaba?” diyerek gözlerine doğru kaldırdı, baktı, bir de ne görsün? Biricik sevgilisi ve dünya yüzünde bir tek nazlısı olan buzağısını yemiş, kuyruğu elinde kalmıştı. Bunu görünce dev karısı hiddetinden yere düştü, bayıldı.</p>
+              <p>Keloğlan, dev karısının bayıldığını görünce arkadaşlarına: “Kuleden ininiz, kaçalım.” dedi. Arkadaşları kuleden inerek ırmağa doğru koşmaya başladılar. Dev karısı ayıldı, onların ırmağa doğru koşmakta olduklarını görünce arkalarından seğirtti. Çocuklar ırmağın kenarına geldiler. Orada yüce söğüt ağaçları vardı. Keloğlan: “Çabuk her birimiz bir ağacın tepesine çıkalım!” dedi. Her biri hemen minare kadar yüksek ağaçların tepesine çıktılar. Dev karısı yetişince çocukların yüce söğütlerin tepesinde şakrak kahkahalarla gülüştüklerini gördü. Dev karısı: “Oraya nasıl çıktın Keloğlan?”</p>
+              <p>Keloğlan: “Teyze, ağacın altına bir sabun, onun üstüne bir bıçak, bıçağın üstüne yine bir sabun koyarak bir merdiven yaptım. Bu merdivene basarak ağacın tepesine kadar çıktım.” Dev karısı, hemen köşke gitti, birçok sabunla bıçak getirdi. Birbiri üzerine istif ederek bir merdiven yaptı. Bunun üzerine çıkınca ayakları kesildiğinden tabanlarından, parmaklarından kan akmaya başladı ve birdenbire merdiven yıkıldı yere yuvarlandı. Dev karısı biraz sonra, bin güçlükle yerinden kalkarak bir balta getirmeye gitti. Keloğlan, arkadaşlarına: “Ağaçlardan inelim, ırmaktan yüzerek karşı sahile geçelim.” dedi. Çocuklar birer balık gibi yüzerek suyun öte yüzüne geçtiler. Dev karısı, köşkten dönünce çocukları karşıki sahilde gördü.</p>
+              <p>Dev karısı: “Oraya nasıl gittin Keloğlan?”</p>
+              <p>Keloğlan: “Teyze, ırmağın ortasına bir değirmen taşı yuvarladık. Ona basarak bu tarafa geçtik.”</p>
+              <p>Dev karısı: “O hâlde bekleyin; şimdi size yetişirim!” Dev karısı hemen yakındaki değirmene koştu. Oradan bir değirmen taşı getirerek ırmağın ortasına attı. Taş, ırmağın çok derin olan dibine daldı. Dev karısı, ırmağın ortasından gerçekten bir atlama taşı varmış gibi bir ayağını ırmağın ortasına attı. Ayağı boşluğa gelince “Gümm!” diye suyun içine düştü. Dev karısı yüzme bilmiyordu, vücudu dağ parçası kadar ağırdı. Kocaman gövde, köpüklü sulara birkaç kere dalıp çıktı. En nihayet boğuldu, gitti… Keloğlan, dev karısının boğulduğunu görünce suda yüzerek yanına geldi. Tırmanarak başının üstüne çıktı. Bıçağıyla dev karısının gözlerini ve kulaklarını kesip çıkardı. Bunları dağarcığına koyduktan sonra ırmağın kıyısına döndü. Arkadaşlarıyla beraber, o memleketin payitahtına gittiler. Dev karısının gözleriyle kulaklarını padişahın sarayına götürdüler.</p>
+              <p>Dev karısı senelerden beri memleketi harap etmişti. Padişah, kim bu dev karısını öldürürse ona büyük mükâfatlar vereceğini ilan etmişti. Padişah, Keloğlan’la arkadaşlarına: “Nasıl bir mükâfat istersiniz?” diye sordu. Keloğlan: “Dev karısının hazinelerini bize verirseniz başka bir şey istemeyiz.” dedi. Padişah: “Bu hazineler zaten sizindir.” diyerek her birine kırk katır verdi. Onları, mallarını getirmek için dev karısının köşküne gönderdi. Oradaki hazineleri aralarında taksim ettiler. Her biri hissesini kendi katırıyla payitahta getirdi. Dört arkadaş birer konak satın aldılar. Birer dükkân açtılar. İş güç sahibi oldular.</p>
+            </div>
+            <p class="kaynak">Ziya Gökalp, Altın Işık · <a href="https://litres-tr.com/book/ziya-gokalp/altin-isik-69428596/read/" target="_blank" rel="noopener">Keloğlan: kaynak metni incele ↗</a><br>Yazarın kamu malı eseri; kaynak e-kitaptaki masal metni. Yalnızca paragraf düzeni değiştirilmiştir.</p>
+          </article>
+          <article id="masal-4" aria-labelledby="baslik-4" hidden>
+            <h3 id="baslik-4" tabindex="-1">Tembel Kız</h3>
+            <p class="bilgi">Emek · Sorumluluk &nbsp; / &nbsp; Yaklaşık 2 dk okuma</p>
+            <div class="metin">
+              <p>Evvel zaman içinde, kalbur saman içinde; pireler berber, develer tellal iken, ben anamın beşiğini tıngır mıngır sallar iken bir karı koca varmış.</p>
+              <p>Bu karı kocanın bir kızı olmuş. Kız, elbebek gülbebek büyütülmüş, ama hiç iş öğrenememiş. Bunun için adına Tembel Kız denilmiş.</p>
+              <p>Bu kız o kadar tembelmiş ki yerinden kalkmaya üşeniyormuş. Anası babası ona bir gelberi yaptırmış. Kız da oturduğu yerden işini gelberiyle yapıyormuş. Kızının evlilik çağı gelmiş. Anası babası kızı bir avcıyla evlendirmiş.</p>
+              <p>Avcı ava gitmiş, bir ördek vurmuş. Eve gelmiş, ördeği temizlemiş, ateşe koymuş. Tekrar ava gitmek üzere hazırlanmış, karısına ateşe ördeği koydum, yanmasın bak demiş. Tembel Kız, olur demiş, demiş ama yerinden bile kalkmamış.</p>
+              <p>Aradan uzunca bir zaman geçmiş. Dilenci eve gelmiş. Tembel Kıza, hanımcığım Allah rızası için bir dilim ekmek demiş. Tembel Kız da yan tarafta mutfak, geç al cevabını vermiş. Dilenci mutfağa girmiş. Bakmış ocakta ördek kaynıyor, almış ördeği, torbasına koymuş, tencerenin içine de ayaklarındaki pis çarıkları... Gelmiş, Tembel Kız&#x27;ın yanına. Bak hanımcığım demiş, ekmeği aldım Allah razı olsun. Şimdi sana bir türkü söyleyeyim de ben gideyim. Türküyü şöyle söylemiş;</p>
+              <p>Senin gaga benim torba içinde, Benim çarık senin çorba içinde, Sen yat kaba yatak yorgan içinde, Ben yiyecem gagayı orman içinde. Dilenci türküyü böyle söylemiş, çekip gitmiş. Aradan bir zaman geçmiş, kızın avcı kocası gelmiş. Karısına ördek pişti mi? Demiş. Karısı olan biteni anlatmış, bak bana bir de türkü söyledi, sana deyiverem demiş, türküyü söylemiş. O zaman avcı kocası durumu anlamış, karısına kızıp azarlamış. Ondan sonra Tembel Kız, tembelliği bırakmış. Onlar ermiş muradına, biz çıkalım kerevetine.</p>
+            </div>
+            <p class="kaynak">Anonim / Vikikaynak katkıcıları · <a href="https://tr.wikisource.org/wiki/Tembel_K%C4%B1z" target="_blank" rel="noopener">Tembel Kız: kaynak metni incele ↗</a><br>CC BY-SA 4.0. Yalnızca paragraf düzeni değiştirilmiştir.</p>
+          </article>
+          <article id="masal-5" aria-labelledby="baslik-5" hidden>
+            <h3 id="baslik-5" tabindex="-1">Karanan ile Tilki</h3>
+            <p class="bilgi">Dürüstlük · İyilik &nbsp; / &nbsp; Yaklaşık 3 dk okuma</p>
+            <div class="metin">
+              <p>Bir varmış, bir yokmuş. Evvel zaman içinde, kalbur saman içinde, cinler cirit atarken, eski hamam içinde. Bir Karaana varmış.</p>
+              <p>Hayatta biricik kızından başka kimi kimsesi olmayan Karaana, o güne kadar biriktirdiği bir teneke balı ve bir teneke yağı alarak kızını ziyarete gidmiş. Az gitmiş, uz gitmiş, dere tepe düz gitmiş, altı ay bir güz gitmiş. Kızının evine yaklaştığı sırada yoluna bir Tilki çıkmış. Tilki: -Karaana sen çok yorulmuşsun, tenekelerden birini bana ver de ben götüreyim, demiş.</p>
+              <p>Karaana bu teklifi kabul etmiş ve yağ tenekesini tilkiye vermiş. Biraz birlikte gittikten sonra Tilki;</p>
+              <p>-Karaana sen git ben kestirmeden gideceğim, demiş. Daha sonra bir teneke yağı yemiş ve tenekenin içini dışkıyla doldurmuş. Yolda Karaana’ya yetişip bu hafif sen bunu alda diğer tenekeyi bana ver demiş. Bal tenekesini alan tilki ben yine kestirmeden geleceğim diyerek oradan uzaklaşmış. Balı da yiyen tilki o tenekeyi de dışkıyla doldurmuş. Karaana’nın kızının evi göründüğünde onu da Karana’ya vererek oradan ayrılmış. Karaana kızının kapısını çalmış ve kızıyla hasret giderdikten sonra içeri girmiş. Vakit öğle olduğu için Karaana’nın kızı kalkar birşeyler hazırlamaya koyulur. Ancak evde hazır bir şey bulamadığı anasına:</p>
+              <p>-Öğlen oldu ama yiyecek pek bir şey de kalmamış, demiş. Karaana da: -Kızım yağ getirdim, bal getirdim, onlardan getir de yiyelim, demiş.</p>
+              <p>Tekrar mutfağa giden kız yağ tenekesini açmış bakmış ki bir teneke dışkı:</p>
+              <p>-Ana virrik, diye bağırmış.</p>
+              <p>Bal tenekesini açmış o da öyle, Yine: -Ana virrik, diye bağırmış.</p>
+              <p>Bunu duyan Karaana kalkmış, kızının yanına varmış. Ne olup bittiğini sormuş ve olanları öğrendikten sonra:</p>
+              <p>-Bunu mutlaka o tilki yapmıştır, demiş ve kızına seslenerek: -Sen bana bir toprak karasakız getir, demiş.</p>
+              <p>Bu karasakızı götürüp bacanın etrafına sürmüş. Gece gelip bacaya oturan tilki, kalkınca kuyruğu karasakıza yapışıp orada kalmış. Karaana gidip kuyruğu alıp eve getirmiş. Kuyruğu kopan tilki gelip kapıya: -Karaana, Karaana ne olur kuyruğumu ver, demiş.</p>
+              <p>Karaana da:</p>
+              <p>-Sen git yağımı geri getir ki, demiş. Çaresiz kalan tilki, ineğe gidip süt ister ki yağ yapıp Karaana’ya vere. Tilkiye hemen sütünü vermeyen inek: -Bana ot getir ki sana süt vereyim, demiş.</p>
+              <p>Tilki varmış çayıra, çayırdan ot istemiş. Çayır:</p>
+              <p>-Git kızları getir üstümde oynasınlar ki sana otumu vereyim, demiş.</p>
+              <p>Kızlara giden tilkiye kızlar:</p>
+              <p>-Bize kuyumcudan git inci, boncuk getir ki gidip çayırda oynayalım demiş. Kuyumcuya giden tilkiden kuyumcu da yumurta istemiş. Tavuklara giden tilkiden tavuklar da darı istemiş. Darı istemeye tarlaya giden tilkiden tarla da su istemiş. Tilki suya gidip olanları anlatınca su tarlayı sulamayı kabul etmiş. Buna oldukça sevinen tilki suyu getirip tarlayı sulamış. Tarladan aldığı darıları tavuklara vermiş ve yumurta almış. Yumurtayı götürüp kuyumcuya vermiş ve kuyumcudan aldığı incileride kızlara vermiş. Kızları çayıra götürmeye ikna etmiş, çayırdan otu almış, ineğe götürmüş. İneğin sütüyle bir teneke yağ yapıp bunu Karaana’ya vermiş. Yağını alan Karaana tilkinin kuyruğunu vermiş. Kuyruğunu alan tilki kuyruğunu tekrar yerine takmış. Bu olay kurnaz tilkiye bir akıl parası olmuş ve bir daha da fırsatçılık yapıp kimseyi aldatmayacağına dair oradakilerine söz vermiş.</p>
+            </div>
+            <p class="kaynak">Anonim / Vikikaynak katkıcıları · <a href="https://tr.wikisource.org/wiki/Karanan_ile_Tilki" target="_blank" rel="noopener">Karanan ile Tilki: kaynak metni incele ↗</a><br>CC BY-SA 4.0. Yalnızca paragraf düzeni değiştirilmiştir.</p>
+          </article>
+          <article id="masal-6" aria-labelledby="baslik-6" hidden>
+            <h3 id="baslik-6" tabindex="-1">Külden Eşek</h3>
+            <p class="bilgi">Kardeşlik · Cesaret &nbsp; / &nbsp; Yaklaşık 6 dk okuma</p>
+            <div class="metin">
+              <p>Evvel zaman içinde, kalbur saman içinde develer tellah iken, bireler berber iken, ben anamın beşiğini tıngır mıngır sallar iken, bir varmış, bir yokmuş. Allah’ın kulu çokmuş; çok söylemesi günahmış. Memleketin birinde üç kız arkadaş varmış. Bunlar bir gün ormana yakacak toplamaya gitmişler. Yolda kızlardan birisi osurmuş. Herkes bunu birbirinin üzerine atmış. Hepsi de kendisinin yapmadığına dair yemin etmiş. Sonunda bu kızlardan birinin üzerine kalmış. Bu kıza “sen bizimle gelemezsin” demişler ve kızı yanlarından kovmuşlar. Kız da evine dönüp olanları anasına anlatmış ve anasına: -Ana benim hiç kardeşim var mı? Anası: -Var, üç tane kardeşin var. Fakat filan yerde avlanıyorlar.” Demiş. Kız: -“Ben kardeşlerimin yanına gitmek istiyorum” deyince Anası da: -“O zaman ben sana külden bir eşek yapayım da git: yalnız gideceğin yere kadar ço ço..</p>
+              <p>diyeceksin, yolda hiç çüş demiyeceksin”, der. Kız yolda giderken anasının dediklerini unutur ve çüş der. Bunun üstüne eşek toz olup savrulmuş. Kız geri dönüp eve gelmiş ve anası tekrardan bir külden eşek daha yapmış. Yine giderken çüş dememesi için tenbihlemiş. Bu defa kız hiç çüş demeden kardeşlerinin avlandığı kulubeye ulaşmış. Fakat kız hemen işe koyulup kardeşleri gelmeden bütün işleri yapmış. Kardeşleri akşam dönünce şaşırmışlar. Kız ortaya çıkarak kendini kardeşlerine tanıtmış ve kardeşleri de buna çok sevinmiş. Çünkü adı Eşefatma (Ayşe Fatma) olan bu kardeşlerini uzun süre görmemişler. Eşefatma’ya dönerek: -Sen sürekli burada kal, ev işlerini yaparsın, demişler. Kızda bunu kabul etmiş. Bir gün yine evi süpürürken bir üzüm tanesi bulmuş.</p>
+              <p>Önce takaya atmış, üzün durmamış, sonra dışarı atmış üzüm gitmemiş, bocu* suna çağırmış gelmemiş, o da çaresiz ağzına atmış ve yutmuş. Bocu daha sonra gelince: -Az evvel beni niçin çağırmıştın, demiş. Eşefatma’da -Bir üzüm buldum. Sana verecektim gelmedin ben de yedim, demiş. Buna çok kızan bocu gitmiş bacaya işemiş ve ateşi söndürmüş. Kız ateşsiz kalınca kardeşlerime nasıl yemek yapacağım diye düşünmeye başlamış. Tam bu sırada bocu: -Şu karşıda devin evi var. Orada devin kızı bulgur kaynatıyor, git deve görünmeden kızından ateş al, demiş. Çaresiz kız devin kızına gitmiş ve bakmış ki gerçekten bulgur kaynatıyor. -Bacı ben ateşe geldim, demiş. Devin kızı da ocaktan biraz ateş vererek ayrıca bir çuvalda sabun ve iğne vermiş.</p>
+              <p>Yine kıza dönerek: -Babam seni görürse öldürür, hemen git yalnız sabunu ve iğneyi yola dökerek git ki babam seni takip ederse yetişemesin, demiş. Dev uyandığında: -Hımm burnuma ademoğlu kokusu geliyor, demiş. Kızı da: -Ne ademoğlu baba, o koku senin koltuk altından gelirdir, demiş. Dev: -Yok bu koku koltuk altı kokusu değil, demiş. Kız: -O zaman götün kokardır, demiş. Dev: -Bu koku götümün kokusu da değil, der ve kızı iyice sıkıştırır. Babasından çok korkan kız çaresiz olanları dev babasına anlatmış. Dev hemen yollara düşmüş. Yolda giderken sabundan kayıp düşmüş, iğne ayağına batmış. Sonunda düşe kalka kızın kulubesine varmış. Kız daha önceden kapıyı kitleyip, arkasına dayak vermiş. Dev gelmiş, kapıyı çalmış ve: -Eşefatma!</p>
+              <p>Anan geldi, aç kapıyı demiş. Eşefatma da: -Benim anamım eli kınalı olur, sen benim anam değilsin, demiş. Bu sırada dev hemen bir tavşan öldürüp kanını parmağına sürmüş ve tekrar: -Kızım kapıyı aç, ben senin ananım istersen bak elim de kınalı, demiş. Kız bakmış ki eli gerçekten kınalı. Biraz ikna olmuş, Dev tekrar: -Kızım kapıyı açmayacaksan parmağını uzatki bir yüzük takayım, demiş. Eşefatma parmağını uzatınca kızın parmağını ısırarak koparmış. Kız oracıkta düşüp kalmış. Akşam kardeşleri eve gelince bakmışlar ki kapı kilitli. Kapıyı çalmışlar, çalmışlar kapıyı açan olmamış. Bacadan inmeye karar vermişler. Önce büyük kardeşe bir ip bağlayıp bacadan sallandırmışlar. Fakat ateşe dayanamayarak: -Beni hemen çekin yandım, demiş. Bu sefer ortanca kardeşi sallandırmışlar.</p>
+              <p>O da ısıya dayanamayınca onu da yukarı çekmişler. Küçük kardeş: -Beni sallandırın, yansam da ölsem de beni çekmeyin, demiş. Küçük kardeşi sallandırmışlar ve içeriye indirmişler. Aşağıya inince bakmış ki kız kardeşi baygın yatıyor. Hemen kapıyı açıp diğer kardeşlerini de içeri almış ve Eşefatma’yı ayıltmışlar. Eşefatma başından geçenleri bir bir ağabeylerine anlatmış. Ağabeyleri hemen bocuyu öldürmüşler ve devi de öldürmeye karar vermişler. Önce büyük kardeş devi öldürmek için yollara düşmüş. Yolda bir çobanla karşılaşmış. Çoban yiğide nereye gittiğini sorduktan sonra demiş ki: -Şu bir külte ekmeği yer sonra da bir guşkana sütü içersen devi ancak öldürebilirsin. Yiğit çobanın dediklerini yiyip içmiş ama bitirmeden kalkmış. Devin kızı birisinin saraylarına doğru geldiğini görünce: -Baba bir yiğit geliyor ki tozu toprağa katıyor, demiş.</p>
+              <p>Babası sormuş: -Şimdi nerede? Kızı: -Üzüm bağında demiş. Dev yine kızına sormuş: -Üzümü nasıl yiyor? Kızı da: Ayıklaya, ayıklaya yiyor, demiş. Babası: -Hiç korkma kızım bir şey yapamaz, demiş. Yiğit devin konağına gelince dev sormuş: -Halı kilim üstünde mi yoksa at, eşek içinde mi yatarsın? Demiş. Yiğit de: -Halı, kilim üstünde, cevabını vermiş. Akşam olunca yiğit yatmış ve uyuduğu sırada da dev gelmiş onu boğarak öldürmüş. Abisi dönmeyince ortanca kardeş yola düşmüş ve abisinin başından geçenler onun da başına gelmiş; Dev onu da uyurken öldürmüş.</p>
+              <p>Ortanca kardeş de gelmeyince çaresiz küçük kardeş yola çıkmış. Çoban yolda buna da rastlamış ve nereye gittiğini sormuş. Çobanın verdiği bir külte ekmeği ve bir guşkana sütü bitirmiş. Üzüm bağına geldiğinde üzümleri ayıklamadan yemiş. Devin kızı bu yiğidi görünce babasına haber vermiş. Babası da: -Şimdi nerede? diye sormuş: Kızı: -Çeşmenin yanında, demiş. Dev: -Suyu nasıl içiyor, Zabullu zubullu mu yoksa üfleye üfleye mi? demiş. Kızı da: -Zabullu Zubullu demiş. Dev: -Kızım işte bundan kork, demiş. Yiğit devin konağına geldiğinde at ve eşek içinde yatmak istemiş ve eşeği de dev gelince anırması için tenbihlemiş. Yatıp uyuyunca dev gelmiş fakat eşek anırdığı için yiğit uyanmış ve kapının arkasına geçerek kılıcını hazırlamış. Dev içeri girdiğinde tek bir kılıçla devi yere sermiş. Daha sonra devin kızına sormuş:</p>
+              <p>-Kırk satır mı istersin yoksa kırk katır mı? demiş. O da: -Kırk katır demiş. Devin kızını kırk katıra bağlamışlar, katırlar kızı taştan taşa çalmış. Eşefatma ve küccük ağabeyi annelerini de yanlarına alarak uzun ve mutlu bir ömür sürmüşler.</p>
+              <p>* Bocu : Küçük köpek</p>
+            </div>
+            <p class="kaynak">Anonim / Vikikaynak katkıcıları · <a href="https://tr.wikisource.org/wiki/K%C3%BClden_E%C5%9Fek" target="_blank" rel="noopener">Külden Eşek: kaynak metni incele ↗</a><br>CC BY-SA 4.0. Yalnızca paragraf düzeni değiştirilmiştir.</p>
+          </article>
+          <article id="masal-7" aria-labelledby="baslik-7" hidden>
+            <h3 id="baslik-7" tabindex="-1">On iki gardaş meseli</h3>
+            <p class="bilgi">Kardeşlik · Sadakat &nbsp; / &nbsp; Yaklaşık 6 dk okuma</p>
+            <div class="metin">
+              <p>Zamanın birinde bir adam varmış. Bu adamın on iki evladı varmış. Çocukglarının ikincisi oğlan, diyerlerinin hepsi gızmış. Çocukları anaları bir gün hasdalanmış, çog geşmemiş hasdalıgdan gurtulamayarag ölmüş. Çocuklar galmış ögsüz. Gel zaman git zaman, herif gagdı evlendi. Ovey ana, çocuklara eyi muamele edmez , çocukları görmeg isdemez. Her gün çocuglara zobba çekermiş. Onnara müstekil gahır tazaka edermiş. Bir gün gadın logma bişirir. Logmaları çocuklara vereceg deyil ya, gakar küpün içine saglar. O gün da düyün varmış, düyüne gider. Çocuklar , övey anaları gidinca, logmaları bulullar; oturullar hep yeller. Gece gadın eve gelir, bakar ne bagsın, logmalar yog. Çocuglara: &quot;Nabdıñız be logmaları? &quot; der. &quot;Yedig&quot; deller. Biraz sora, adam gelir eve.</p>
+              <p>Gadın: &quot;Ben bu çocugları isdemem. Ne yaparsañ yab, bu çocugları başımdan defet. Ya onnar gider, ya da ben&quot; der. Nabsın adam razı olur. Çocukları toblar başına: &quot;Yarın sizi dağa götüreceğim odun keselim. Sonra da çarşıya götürüb satarıg&quot; der. Sabah olunca gabacığını doldurur , yemeğini de alır yanına, çocukları götürür dağa. Onnara: &quot;Aha bu ağaşları geceye gadar kesecegsiñiz. Ben da bu tepenin arkasındaki ağaşları keseyim. Gece olunca yanıñiıza gelirim&quot; der. Gabağı da alır, tepenin arkasına gider. Tepenin arkasındaki bir ağaca asar su gabacığını. Rüzgar esinca , gabag tag tag ağaca vurur. Çocuglar da beller bubaları ağaş keser. Neyisa güneş dulunur, ne buba var ne muba . Çocuglar: &quot;Gidelim bakalım bubamıza&quot; deller .</p>
+              <p>Tepenin arkasına bakallar, babaları yok. Ağaşda sallanan su gabacığını görüller, annallar :</p>
+              <p>&quot;Vay bubacıg bubacıg Tag tag eder gabacıg Bizi bırakıb da gaçan bubacıg&quot;</p>
+              <p>deller. Yol sokag bilmedigleri için döneller bir ağacın altına yatıllar. Ertesi gün gakallar. Egmeg yok, su yog. Ne yeycegler, ne içecekler? . En böyükleri olan gız çıkar tepeye edrafa bakar. İleride bir duman görür. Gider gider, ateşi bulur. Bakar gözü görmez bir döv garısı deyirmende şeker yarar. Yanında bir tahda egmeg, gazanda da çocuk eti bişer, Döv garısı da cag cag sakız çiyner. Gız, yavaşcacıg tahdadan egmeg, gazandan da çocuk eti çalar. Gaçar gider gardaşcıklarının gamını doyurur. Devrisi sabah gene acıkıllar. Eh, yeycek bişey yog. Gız nabsın, gene gider döv garısının yanına. Sezdirmeden egmeg ve et alır. Canı şeker da çeker. Döv garısının gucağından şeker çalmag ister. Döv garısının gözü görmez ama, gızın kokusunu alır.</p>
+              <p>&quot;Yaban eti tüter&quot; deyeregden kapar gızı. Gız yalvarır. Halını annadır: &quot;Dağda on iki gardaş aş galdıg, acı bize&quot; der. O da: &quot;AI gardaşcıglarıñı böyce bura gel. Buraşda egmeg yemeg çok, yesinner&quot; der, gandırır gendini. Gız, güneş dulumu alır gardaşcıglarını döv garısının yanına gider. Yeller, içeller gamılarını doyurullar. Döv garısı dutar gendilerini bir mahraya götürür. &quot;Aha buracıgda yatacagsıfuz&quot; der. Gendi da mahrada galır. Sabaha yakın gakar en güçüg çocuğu yer. Devrisi gün abaları gakar bakar en güçüg gardaşı yog. &quot;Hah, galiba döv garısı en guçug yedi. Eh, gayrı her gün birimizi yeyib bitireceg&quot; der. Oğlan gardaşına meseleyi açar. O gece oğlanınan gız bir daş bulullar, mahranın bir yerine vura vura delig açarlar, deligden gaçallar.</p>
+              <p>Gideller gideller, düz bir ovaya geliller. Bakallar bir çuban davarıynan ovada. Başlallar çubanı dudmaya. Lakin addıgları daşlar hep para olur. Çuban da: &quot;Atın yavrularım atın&quot; der. Onnar addıgca daşlar heb para kesilir. Neyisa gideller çubanın yanına. Çuban der: &quot;Ne dilersiñiz benden? &quot;. Onnar da: &quot;Aha bu paraları al, davarıñı bize ver&quot; de ller. Çuban gabul eder; alır parayı, bırakır davarı gendilerine. Meyer davarın köpeği yogmuş, onun yerine davarı begleyen üş dane aslan varmış. Alıllar davarı ve aslannarı, gideller ovada daşdan bir ev yapallar içine oturullar. Oğlan ovada davar begler, gız evde ev işi yapar, yemeg bişirir, geçinir gidellermiş. Bir gün gız evde hellim yaparmış. Hellim suyunu süzmüş süzmüş, su gidmiş bir dövün mahrasına gadar.</p>
+              <p>Döv, hellim kokusunu alır, suyu takib edereg gızın evini bulur. İçeri girer. Gıza: &quot;Sen bu evde yalnız galıñ? &quot; der. Gız da: &quot;Yog, gardaşım çubandır ovada davar begler, ben da onun yemeğini bişiririm&quot; der. Döv gızın güzelliği garşısında yumuşar. Ona: &quot;Gardaşıñı öldürürsam, kemiglerini sana getirirsam, bana yasdıg yaparmıñ? Yaparsan ben da seni garılığa alayım, garım olasın&quot; der. Gızın göynü de dövü beğenir. &quot;Gabul&quot; der, &quot;Gardaşımı öldür&quot;. Neyisa, döv gider ovaya gızın gardaşını bulur. &quot;Şimdi seni buracıgda öldüreceğim, kemiklerini da evleneceyim&quot; der. Oğlan şaşınr, sonra gendini toblar ve döve: &quot;Sana iki çift sözüm var. Bırag çıkayım ağaca söyleyim sana da neyisa efgarın yab&quot; der. Oğlan çıkar ağaca: &quot;Haydeyif aslannarım bu döv beni yeyceg, o beni yemeden siz onu yeyiñ, her parçasını gulağım gadar edin&quot; der.</p>
+              <p>Aslannar dövün üsdüne hücüm eder. Her parçasını oğlanın gulağı gadar edeller, yeller bitiriller. Oğlan ener ağaşdan aşşa, toplar dövün kemiglerini gider eve. Gızgardaşına: &quot;Böyle böyle mesele... &quot; der. Gız dövün ölümüne üzülür, gakar kemiklerini toplar yasdıg yapar. Çog uzadmayalım, devrisi günü oğlan ovadan yorgun argın eve gelir. Yasdıg da oraşda minderin üstünde dayalı durur. Diynenmeg için oturur mindere, gañrılır arkasını da dayar yasdığa. Yasdığın içindeki kemig batar oğlanın boş yerine. Oğlan düşünca bayılır. Gız: &quot;Aman gardaşım öldü, aman gardaşım öldü&quot; deyereg oğlanı alır götürür havlıya gömer. Gız galır evde yalınız. Günner geçer, artıg gız ne gendine ne de hayvannara bakar. Gendi da hayvannar da galır aç. Aslannar bir gün delier: &quot;Gidelim ağamızı çıkaralım mezardan, ölmediysa annadalım halımızı da belkim o bizim garnımızı doyurur.</p>
+              <p>Yogsa bu gız bizi aşlıgdan öldüreceg&quot;, Gideller oğlanı mezardan çıkarıllar. Bir da ne baksırmar. oğlanın boş yerine dövün kemiği gömülü. Çekinca çıkarıllar kemiği. Oğlan: &quot;Hapşu&quot; der, hapşırarag uyanır. &quot;Noldu bana&quot; der. Aslannar da gendine her şeyi annadarag dövün kemiğini gösteriller. Oğlan hemen meseleyi çakar: &quot;Demeg gızgardaşım dövü sevib, benim ölümüme göz yumdu ha&quot; der. Hemen aslannarını yolladarag gızgardaşını parçaladır. Gel zaman git zaman, aslannarın yavrıları olur. Oğlan, aslan yavrısını satar, bir gartal yavrısı alır. Gartal böyüyünca boş vakıtlarında gartalın üstüne binip gezmelere çıkar. Her bir yeri dolaşır. Bir gün padişahın gonağının üstünde uçarkana. padişahın gızını görür. Birbirlerini beyenirler. Gıza der: &quot;Bana gaçañ? &quot;. Gız da: &quot;Gaçarım ya&quot; der. Oğlan da dakınca gancasına gızı, kapar götürür evine.</p>
+              <p>Padişah, gızını gaybedinca deli olur: &quot;Gızımı kim bulur da bana getirirsa, ona gızımı da tahdımı da vereceyim&quot; der. Oğlan bu haberi duyunca gızı kaptığı gibi götürür padişaha. Padişah da sözünde durarak gızınan oğlana kırg gün kırg gece düyün derneg yaparag onnarı evlendirir.</p>
+              <p>Onnar murad alıb verirkana ben da bagdım da geldim. Gelirkan yolda bir elma buldum. Yarısını ben yedim, yarısını da bu meseli diyneyennere verdim.</p>
+            </div>
+            <p class="kaynak">Anonim / Vikikaynak katkıcıları · <a href="https://tr.wikisource.org/wiki/On_iki_garda%C5%9F_meseli" target="_blank" rel="noopener">On iki gardaş meseli: kaynak metni incele ↗</a><br>CC BY-SA 4.0. Yalnızca paragraf düzeni değiştirilmiştir.</p>
+          </article>
+          <article id="masal-8" aria-labelledby="baslik-8" hidden>
+            <h3 id="baslik-8" tabindex="-1">İncircinin dediği</h3>
+            <p class="bilgi">İletişim · Aile &nbsp; / &nbsp; Yaklaşık 3 dk okuma</p>
+            <div class="metin">
+              <p>Gocagarının biri oğlunun yanında galırmış. Ama hayatından hiç memnunluk getirmezmiş. Devamlı ıhlanır, ahlanır, sümük çekermiş. Hukara gelini onu memnun etmek için elinden geleni yaparmış. Gene bir gün odada otururlarken kapının önünden satıcılar geçermiş. Gelini, gocagarıyı sevindirmek için:</p>
+              <p>- Anne, sağa bundan alayım?</p>
+              <p>- I, ıhh. İstemem.</p>
+              <p>- Bundan? - A, aaa, istemem, dermiş da başga bişey demezmiş. Derkan, bu defa da kapının önünden bir incirci geçermiş. Gelin heman atılmış:</p>
+              <p>- Dur, sağa incir alayım. Sen inciri seven, deyerek incirciyi çağırmış. İncirci gelince, gelin:</p>
+              <p>- Bize bi ogga incir dart da içerden para alıp geleyim, demiş. Gelin içeri girinca, incirci gocagarının sümük çektiğini görmüş. Yanına giderek:</p>
+              <p>- Neyin var ya gocagarı? diye sormuş. Gocagarı cevap vermeyip fena fena bakmış incircinin yüzüne. Bunun üzerine incirci da: - Bilin be gocagarı, ben senin ne istediğini bilirim. Senin canın goca ister be, goca, demiş.</p>
+              <p>Bunu duyan gocagarı:</p>
+              <p>- İsterim ya, demiş.</p>
+              <p>Bu arada gelin içerden parayı getirmiş. Parayı alan incirci oradan uzaklaşmış. Gelin bakmış bu sefer da gaynanası derin derin iç çeker. Gelini:</p>
+              <p>- Eee, nedir be ana derdin? Söyle da gurtul sen da biz da, demiş. Bunun üstüne gocagarı:</p>
+              <p>- İncircinin dediği, incircinin dediği deyi başlamış söylenmeye. Gece olup da gadının gocası eve gelinca, bütün olup biteni gocasına anlatmış. Adam:</p>
+              <p>- Bir da ben sorayım bakayım. Belkim bana söyler ne istediğini, demiş. Gocagarının yanına gidip:</p>
+              <p>- Neyin var be ana? Bir şey istersan çekinme da söyle, demiş. Bunun üzerine anası: - İncircinin dediği, incircinin dediği, deyi dutturmuş gene. Yalnız bunu söyler, başga da bir şey söylemezmiş. Oğlu da sinirlenmiş, onu oracıkta bırakıp gaçmış. Ertesi gün sabah olunca adam evinden çıkıp incirciyi aramaya başlamış. Akşama doğru bulmuş.</p>
+              <p>- Yahu demiş, sen bizim gocagarıya ne dedin da ‘incircinin dediği incircinin dediği’ der başga da bir şey söylemz. İncirci da: - Vallahi senin gocagarı ıhlanır, sümük çekerdi. Ben da merak ettim neyin var be gocagarı deyi sordum. Fena fena bagdığını görünca, vallahi sen goca isden dedim gendine, demiş.</p>
+              <p>Adam:</p>
+              <p>- Demek öyle haa!... deyip doğru eve gitmiş. Anasına:</p>
+              <p>- Be ana sana goca alayım isten? demiş. Gocagarının keyfi yerine gelmiş. Sevincinan:</p>
+              <p>- İsterim ya, isterim ya demiş. Oğlu da:</p>
+              <p>- Tamam böyce sabahı damda et, yarın da seni evlendirelim, demiş. Gocagarı: - Tamam, deyip dama çıkmış. O gece da gırağıdan ortalık geçilmezmiş. Gocagarı:</p>
+              <p>- Böyce tuftur (soğuk) gece, yarın gucak gucağa; böyce tuftur gece, yarın gucak gucağa, deye deye donup nalları dikmiş.</p>
+              <p>Ben da bırakdım da geldim.</p>
+            </div>
+            <p class="kaynak">Anonim / Vikikaynak katkıcıları · <a href="https://tr.wikisource.org/wiki/%C4%B0ncircinin_dedi%C4%9Fi" target="_blank" rel="noopener">İncircinin dediği: kaynak metni incele ↗</a><br>CC BY-SA 4.0. Yalnızca paragraf düzeni değiştirilmiştir.</p>
+          </article>
+          <div class="gezinme" role="group" aria-label="Masallar arasında gezinme">
+            <button id="onceki" disabled>← Önceki masal</button>
+            <button id="sonraki">Sonraki masal →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="hakkinda" aria-labelledby="hakkinda-baslik">
+      <h2 id="hakkinda-baslik">Söz uçar,<br>masal kalır.</h2>
+      <div>
+        <p>Bu seçki, Türk halk anlatılarından yayımlanmış sekiz masalı bir araya getirir. Altı anonim anlatı Vikikaynak'tan, Keloğlan ve Tembel Ahmet ise Ziya Gökalp'in Altın Işık eserinin erişime açık e-kitap önizlemesinden alınmıştır.</p>
+        <p>Masal cümleleri yeniden yazılmamış; kaynakların yazımı ve yöresel ifadeleri korunmuştur. Yalnızca paragraf düzeni sayfaya uyarlanmıştır. Her masalın sonunda metnin kaynağı bulunur.</p>
+        <p>Vikikaynak metinleri, ilgili sayfaların katkıcılarına atıfla <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.tr" target="_blank" rel="noopener">CC BY-SA 4.0</a> kapsamında paylaşılır. Ziya Gökalp'in masalları yazarın kamu malı eserindendir; kullanılan e-kitap bağlantısı metinlerin altında verilmiştir.</p>
+      </div>
+    </section>
+  </main>
+  <footer><div class="kapsayici"><span>Bir Varmış · Türk Masalları Derlemesi</span><span>Gökten üç elma düşmüş…</span></div></footer>
+  <noscript><p>Masal seçimi ve arama için JavaScript'i etkinleştir. İlk masal yukarıda okunabilir.</p></noscript>
+  <script>
+    const masallar = Array.from(document.querySelectorAll('article'));
+    const dugmeler = Array.from(document.querySelectorAll('.masal-listesi button'));
+    const arama = document.querySelector('#arama');
+    const onceki = document.querySelector('#onceki');
+    const sonraki = document.querySelector('#sonraki');
+    const kucult = document.querySelector('#kucult');
+    const buyut = document.querySelector('#buyut');
+    let secili = 0;
+    let boyut = 19;
+    function masalAc(sira, odakla = true) {
+      secili = sira;
+      masallar.forEach((masal, i) => { masal.hidden = i !== sira; });
+      dugmeler.forEach((dugme, i) => {
+        dugme.setAttribute('aria-pressed', i === sira ? 'true' : 'false');
+      });
+      document.querySelector('#konum').textContent = 'Masal 0' + (sira + 1) + ' / 08';
+      onceki.disabled = sira === 0;
+      sonraki.disabled = sira === masallar.length - 1;
+      if (odakla) {
+        masallar[sira].querySelector('h3').focus({ preventScroll: true });
+        document.querySelector('#okuma').scrollIntoView({ block: 'start' });
+      }
+    }
+    dugmeler.forEach((dugme, i) => {
+      dugme.addEventListener('click', () => masalAc(i));
+    });
+    onceki.addEventListener('click', () => masalAc(secili - 1));
+    sonraki.addEventListener('click', () => masalAc(secili + 1));
+    arama.addEventListener('input', () => {
+      const kelime = arama.value.trim().toLocaleLowerCase('tr-TR');
+      let sayi = 0;
+      dugmeler.forEach(dugme => {
+        const eslesiyor = dugme.textContent.toLocaleLowerCase('tr-TR').includes(kelime);
+        dugme.parentElement.hidden = !eslesiyor;
+        if (eslesiyor) sayi++;
+      });
+      document.querySelector('#sonuc').textContent = sayi + ' masal listeleniyor';
+      document.querySelector('#bos').hidden = sayi !== 0;
+    });
+    function yaziAyarla(fark) {
+      boyut = Math.max(17, Math.min(25, boyut + fark));
+      document.querySelector('#okuma').style.setProperty('--okuma-boyutu', boyut + 'px');
+      kucult.disabled = boyut === 17;
+      buyut.disabled = boyut === 25;
+    }
+    kucult.addEventListener('click', () => yaziAyarla(-2));
+    buyut.addEventListener('click', () => yaziAyarla(2));
+    masalAc(0, false);
+  </script>
+</body>
+</html>
